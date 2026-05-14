@@ -7,12 +7,13 @@ cfg:
     core_tags: true
   agent:
     prometheus_client:
-      listen: 10086
+      listen: 9273
   net_response:
     enabled: true
     services:
       prosgresql: {}
       redis: {}
       prometheus: {}
-      elasticsearch: {}
+      victoriaLogs: {}
       kafka: {}
+fullnameOverride: telegraf

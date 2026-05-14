@@ -1,18 +1,28 @@
+# categraf specific configuration
 cfg:
-  cpu:
-    percpu: true
-    totalcpu: true
-    collect_cpu_time: false
-    report_active: true
-    core_tags: true
-  agent:
-    prometheus_client:
-      listen: 9273
-  net_response:
-    enabled: true
-    services:
-      prosgresql: {}
-      redis: {}
-      prometheus: {}
-      elasticsearch: {}
-      kafka: {}
+  # http server configuration - 对外暴露 /metrics 端点
+  http:
+    enable: true
+    port: 9100
+    print_access: false
+    pprof: false
+    timeout: 30
+
+  # nightingale server configuration
+  writer:
+    url: "http://nserver-service:17000/prometheus/v1/write?ignore_ident=true"
+    basic_auth_user: ""
+    basic_auth_pass: ""
+    timeout: 5000
+    dial_timeout: 2500
+    max_idle_conns_per_host: 100
+    batch: 2000
+    chan_size: 10000
+
+  # global configuration
+  global:
+    print_configs: true
+    hostname: "$HOSTNAME"
+    omit_hostname: false
+    precision: "ms"
+    interval: 15

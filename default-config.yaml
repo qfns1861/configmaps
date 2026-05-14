@@ -1,0 +1,81 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: default-config
+  namespace: argo
+data:
+  # 独立 key（供 configMapKeyRef 在 read-config 之前使用）
+  argo_server: "http://argo.qfns.com:31549"
+  argocd_server: "http://argocd-server.argocd.svc.cluster.local"
+  gitlab_url: "http://192.168.16.128"
+
+  # ========================
+  # 🌐 全局（平台级）
+  # ========================
+  global.yaml: |
+    parameters:
+      cicd_file_path: "cicd.yaml"
+
+      # 基础设施
+      argocd_server: "argocd-server.argocd.svc.cluster.local"
+      kube_versions: "1.28.0,1.32.0"
+
+      # 工具版本
+      helm_version: "3.16.4"
+
+      # 通用镜像
+      image_python_git: "python-git:1.0.0"
+      image_helm: "alpine/helm:3.16.4"
+      image_argocd: "argocd-python:v3.3.4"
+
+  # ========================
+  # 📦 charts 项目
+  # ========================
+  charts.yaml: |
+    parameters:
+      charts_repo: "http://192.168.16.128/root/charts.git"
+      configmaps_repo: "http://192.168.16.128/root/configmaps.git"
+      charts_registry: "http://192.168.16.128:30380"
+
+      charts_name: "charts"
+      configmaps_name: "configmaps"
+
+      configmaps_default_branch: "main"
+      charts_default_branch: "main"
+
+  # ========================
+  # 📦 configmaps 项目
+  # ========================
+  configmaps.yaml: |
+    parameters:
+      charts_repo: "http://192.168.16.128/root/charts.git"
+      configmaps_repo: "http://192.168.16.128/root/configmaps.git"
+      charts_registry: "http://192.168.16.128:30380"
+
+      charts_name: "charts"
+      configmaps_name: "configmaps"
+
+      configmaps_default_branch: "main"
+      charts_default_branch: "main"
+
+  # ========================
+  # 📊 telegraf 项目
+  # ========================
+  telegraf.yaml: |
+    parameters:
+      telegraf_repo: "http://192.168.16.128/root/telegraf.git"
+      image_registry: "registry.example.com/cicd/telegraf"
+
+      image_golang: "golang:1.22"
+      image_buildx: "moby/buildkit:latest"
+
+  # ========================
+  # 📊 categraf 项目
+  # ========================
+  categraf.yaml: |
+    parameters:
+      categraf_repo: "http://192.168.16.128/root/categraf.git"
+      image_registry: "registry.example.com/cicd/categraf"
+
+      image_golang: "golang:1.22"
+      image_buildx: "moby/buildkit:latest"

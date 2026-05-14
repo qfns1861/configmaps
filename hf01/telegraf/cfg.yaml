@@ -14,5 +14,5 @@ cfg:
       prosgresql: {}
       redis: {}
       prometheus: {}
-      elasticsearch: {}
+      victoriaLogs: {}
       kafka: {}

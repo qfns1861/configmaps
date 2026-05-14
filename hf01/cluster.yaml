@@ -7,15 +7,16 @@ env:
   namespace: hf01
   zabbix: false
   nginx-ingress: false
-  k8sVersion: 1.23
+  k8sVersion: 1.32
   timeZone: utc
   kafka: true
-  canary: false
-  filebeat: true
-  elasticsearch: true
+  canary: true
+  vector: true
+  victoriaLogs: true
 cluster:
   interIps:
-  - 10.0.0.1
-  dns: siyi.cicd.com
+    - 10.0.0.1
+  dns: qfns.cicd.com
   application:
-  - telegraf
+    - telegraf
+    - categraf

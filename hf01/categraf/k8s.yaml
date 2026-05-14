@@ -3,10 +3,10 @@ env:
   vector: false
   victoriaLogs: false
 argo:
-  app: telegraf # 必填：应用名
+  app: categraf # 必填：应用名
   cluster: hf01 # 必填：集群名
-  chart: telegraf # 必填：chart 名
-  chartVersion: 1.8.59 # 必填：chart 版本
+  chart: categraf # 必填：chart 名
+  chartVersion: 1.0.0 # 必填：chart 版本
   chartRepo: http://192.168.16.128:30380 # 必填：chart 仓库
   server: https://kubernetes.default.svc # 必填：目标集群
   namespace: hf01 # 选填：命名空间（默认 = app）
@@ -14,10 +14,7 @@ argo:
 k8s:
   replicaCount: 3
   image:
-    repo: telegraf
-    tag: 1.32.1-alpine-cicd
+    repo: flashcatcloud/categraf
+    tag: v0.5.4
     meta:
       pullPolicy: IfNotPresent
-
-  cilium:
-    enabled: true

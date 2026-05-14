@@ -1,0 +1,18 @@
+# ============================================================
+# cicd.yaml - Charts / Configmaps CI/CD 项目配置
+# ============================================================
+# 放置在 charts 和 configmaps 仓库根目录，由 read-config 读取
+# 与 default-config 中的 defaults.yaml 合并，此文件优先级更高
+# ============================================================
+
+# 项目标识
+project_name: charts
+
+parameters:
+  # 仓库目录名称
+  charts_name: "charts"
+  configmaps_name: "configmaps"
+
+  # 默认分支
+  configmaps_default_branch: "main"
+  charts_default_branch: "main"

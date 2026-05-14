@@ -1,0 +1,57 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: hf01-apps
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+
+  # 允许 CI/CD 临时修改版本不被覆盖（选填、测试）
+  ignoreApplicationDifferences:
+    - jsonPointers:
+        # chart version
+        - /spec/sources/0/targetRevision
+
+        # values branch
+        - /spec/sources/1/targetRevision
+
+  generators:
+    - git:
+        repoURL: http://192.168.16.128/root/configmaps.git
+        revision: HEAD
+        files:
+          - path: hf01/**/k8s.yaml
+  template:
+    metadata:
+      name: '{{ .argo.cluster }}-{{ .argo.app }}'
+    spec:
+      project: default
+      sources:
+        # 源1：Helm chart
+        - repoURL: '{{ .argo.chartRepo }}'
+          chart: '{{ .argo.chart }}'
+          targetRevision: '{{ .argo.chartVersion }}'
+          helm:
+            releaseName: '{{ .argo.app }}'
+            ignoreMissingValueFiles: true
+            valueFiles:
+              # 顺序重要：main 先加载，hf01 后覆盖
+              - $valuesRef/default/{{ .argo.app }}/k8s.yaml
+              - $valuesRef/default/{{ .argo.app }}/cfg.yaml
+              - $valuesRef/default/cluster.yaml
+              - $valuesRef/{{ .argo.cluster }}/{{ .argo.app }}/k8s.yaml
+              - $valuesRef/{{ .argo.cluster }}/{{ .argo.app }}/cfg.yaml
+              - $valuesRef/{{ .argo.cluster }}/cluster.yaml
+
+        # 源2：Git values（分支从 yaml 获取）
+        - repoURL: http://192.168.16.128/root/configmaps.git
+          targetRevision: '{{ default "HEAD" .argo.valuesBranch }}'
+          ref: valuesRef
+
+      destination:
+        server: '{{ .argo.server }}'
+        namespace: '{{ default .argo.app .argo.namespace }}'
+      syncPolicy:
+        syncOptions:
+          - Replace=true

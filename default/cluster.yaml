@@ -9,11 +9,16 @@ env:
   mysql: false
   redis: true
   mongodb: false
-  istio: true
   prometheus: true
+  k8sVersion: 1.32
+  timeZone: utc
+  kafka: true
+  canary: false
+  vector: true
+  victoriaLogs: true
 cluster:
   interIps:
   - 10.0.0.1
-  dns: siyi.cicd.com
+  dns: qfns.cicd.com
   application:
   - telegraf
